@@ -1,36 +1,34 @@
 import ReactPaginate from 'react-paginate';
-import css from "./Pagination.module.css"
+import css from './Pagination.module.css';
 
 interface PaginationProps {
-    pageCount: number,
-    onPageChange: (page: number) => void,
-    currentPage: number,
-
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (selectedItem: { selected: number }) => void;
 }
-function Pagination  ({pageCount, onPageChange, currentPage}: PaginationProps) {
-  
-  if (typeof pageCount !== "number" || pageCount <= 1) return null;
-if (typeof currentPage !== "number" || currentPage < 1) return null;
 
-  
-    return (
+const Pagination = ({ totalPages, currentPage, onPageChange }: PaginationProps) => {
+  if (totalPages <= 1) return null;
+
+  return (
     <ReactPaginate
-      className={css.pagination} 
-      pageClassName={css.page} 
-      activeClassName={css.active}
-      previousClassName={css.prev}
-      nextClassName={css.next} 
-      breakClassName={css.break} 
-      disabledClassName={css.disabled} 
-      previousLabel="<"
-      nextLabel=">" 
-      breakLabel="..." 
-      pageCount={pageCount} 
+      pageCount={totalPages}
       forcePage={currentPage - 1}
-      onPageChange= {(event) => onPageChange(event.selected + 1)} 
-      
+      onPageChange={onPageChange}
+      containerClassName={css.pagination}
+      pageClassName={css.page}
+      pageLinkClassName={css.pageLink}
+      previousClassName={css.previous}
+      nextClassName={css.next}
+      activeClassName={css.selected}
+      disabledClassName={css.disabled}
+      breakClassName={css.break}
+      previousLabel="Previous"
+      nextLabel="Next"
+      pageRangeDisplayed={3}
+      marginPagesDisplayed={1}
     />
   );
 };
 
-export default Pagination
+export default Pagination;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchNoteById, deleteNote } from '@/lib/api';
@@ -24,11 +24,20 @@ const NoteDetailsClient = () => {
     refetchOnMount: false,
   });
 
+  const handleNavigateBack = useCallback(() => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back();
+      return;
+    }
+
+    router.push('/notes/filter/All');
+  }, [router]);
+
   const deleteMutation = useMutation({
     mutationFn: deleteNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      router.push('/notes');
+      handleNavigateBack();
     },
   });
 
@@ -52,7 +61,7 @@ const NoteDetailsClient = () => {
     <div className={css.container}>
       <button
         className={css.backButton}
-        onClick={() => router.push('/notes')}
+  onClick={handleNavigateBack}
         aria-label="Back to notes"
       >
         ← Back to Notes
